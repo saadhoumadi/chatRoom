@@ -1,0 +1,748 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+                <!-- <h1 class="title pb-2 pt-0">Principaux</h1> -->
+
+    <!-- Card Advance -->
+    <div class="row match-height">
+      <!-- Congratulations Card -->
+      <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="card card-congratulations">
+          <div class="card-body text-center">
+            <img src="assets/images/elements/decore-left.png" class="congratulations-img-left" alt="card-img-left" />
+            <img src="assets/images/elements/decore-right.png" class="congratulations-img-right" alt="card-img-right" />
+            <div class="avatar avatar-xl bg-primary shadow">
+              <div class="avatar-content">
+                <i data-feather="award" class="font-large-1"></i>
+              </div>
+            </div>
+            <div class="text-center" *ngIf="!isInHolliday()">
+              <h1 class="mb-1 text-white">Ravis de vous retrouver <strong class="text-capitalize">{{ currentUser?.firstName }}</strong>,</h1>
+              <p>Nous sommes ravis de vous accueillir dans l'application de collaboration au sein de <strong>DXC Technology.</strong> Nous espérons que
+              votre expérience de travail sera enrichissante et productive.</p>             
+            </div>
+            <div class="text-center" *ngIf="isInHolliday()">
+              <h1 class="mb-1 text-white">Bonne vacances <strong class="text-capitalize">{{ currentUser?.firstName
+                  }}</strong>,</h1>
+             <p>Amusez-vous bien ! Il est maintenant temps de laisser de côté toutes vos responsabilités professionnelles et de profiter
+            de votre petite famille et d’un repos bien mérité ! <strong>Bonne vacances à vous</strong> cher collaborateur !</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Congratulations Card -->
+
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header d-flex flex-column align-items-start pb-0">
+            <div class="avatar bg-light-primary p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="users" class="font-medium-5"></i>
+              </div>
+            </div>
+            <p class="mt-1 w-100" style="font-size: 17px;">il ya <strong>{{ calculerTempsEcoule(currentUser.lastAuthentication) }}</strong></p>
+            <p class="mb-0">Derniere authentification</p>
+          </div>
+
+          <!-- Apexchart component-->
+          <div id="gainedChartoptions" #gainedChartRef>
+            <apx-chart
+              [series]="data.subscribers_gained.series"
+              [chart]="{
+                height: 100,
+                width: isMenuToggled === true ? gainedChartRef.offsetWidth : gainedChartoptions.chart.width,
+                type: 'area',
+                toolbar: {
+                  show: false
+                },
+                sparkline: {
+                  enabled: true
+                }
+              }"
+              [stroke]="gainedChartoptions.stroke"
+              [fill]="gainedChartoptions.fill"
+              [tooltip]="gainedChartoptions.tooltip"
+              [colors]="gainedChartoptions.colors"
+              [dataLabels]="gainedChartoptions.dataLabels"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header d-flex flex-column align-items-start pb-0">
+            <div class="avatar bg-light-warning p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="activity" class="font-medium-5"></i>
+              </div>
+            </div>
+            <h2 class="font-weight-bolder mt-1">7 jours</h2>
+            <p class="mb-0">Connexions succesives</p>
+          </div>
+
+          <!-- Apexchart component-->
+          <div id="orderChartoptions" #orderChartRef>
+            <apx-chart
+              [series]="data.ordersRecevied.series"
+              [chart]="{
+                height: 100,
+                width: isMenuToggled === true ? orderChartRef.offsetWidth : orderChartoptions.chart.width,
+                type: 'area',
+                toolbar: {
+                  show: false
+                },
+                sparkline: {
+                  enabled: true
+                }
+              }"
+              [stroke]="orderChartoptions.stroke"
+              [fill]="orderChartoptions.fill"
+              [tooltip]="orderChartoptions.tooltip"
+              [colors]="orderChartoptions.colors"
+              [dataLabels]="orderChartoptions.dataLabels"
+            ></apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+    <!-- today event -->
+    <h1 class="title pb-2 pt-0">Aujourd'huit</h1>
+    <div class="row">
+            <div class="col-lg-3 col-sm-6 col-12">
+              <div class="card">
+                <div class="card-header">
+                  <div>
+                    <h3 class="font-weight-bolder mb-0 text-warning" [ngClass]="{
+                                 'text-success':currentUser.workStatus==='OFFICE',
+                                 'text-warning':currentUser.workStatus=='HOLLIDAY',
+                                 'text-danger':currentUser.workStatus=='MISSION'
+                                }">{{currentUser.workStatus}}</h3>
+                    <p class="card-text">Mon statut</p>
+                  </div>
+                  <div class="avatar p-50 m-0" [ngClass]="{
+                                 'bg-light-success':currentUser.workStatus==='OFFICE',
+                                 'bg-light-warning':currentUser.workStatus=='HOLLIDAY',
+                                 'bg-light-danger':currentUser.workStatus=='MISSION'
+                                }">
+                    <div class="avatar-content">
+                      <i data-feather="map-pin" class="font-medium-5"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="font-weight-bolder mb-0" [ngClass]="{
+                     'text-success':sentimentStatus==='SATISFIED',
+                     'text-primary':sentimentStatus=='NEUTRAL',
+                     'text-danger':sentimentStatus=='UNSATISFIED'
+                    }" *ngIf="sentimentStatus">{{sentimentStatus}}</h3>
+              <h3 class="text-danger font-weight-bolder mb-0" *ngIf="!sentimentStatus">Non publié</h3>
+              <p class="card-text">Mon sentiment</p>
+            </div>
+            <div class="avatar bg-light-danger p-50 m-0" *ngIf="!sentimentStatus">
+              <div class="avatar-content">
+                <i data-feather="smile" class="font-medium-5"></i>
+              </div>
+            </div>
+      
+            <div class="avatar  p-50 m-0" *ngIf="sentimentStatus" [ngClass]="{
+                     'bg-light-success':sentimentStatus==='SATISFIED',
+                     'bg-light-primary':sentimentStatus=='NEUTRAL',
+                     'bg-light-warning':sentimentStatus=='UNSATISFIED'
+                    }">
+              <div class="avatar-content">
+                <i data-feather="smile" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+               <h3 class="font-weight-bolder mb-0 text-primary" *ngIf="!hasRoleManager()">{{projetEncours.title}}</h3>
+              <h3 class="font-weight-bolder mb-0 text-primary" *ngIf="hasRoleManager()">{{projectEndSoon.title}}</h3>
+              <p class="card-text" *ngIf="!hasRoleManager()">Projet en cours</p>
+              <p class="card-text" *ngIf="hasRoleManager()">Plus proche projet à livrer</p>
+
+            </div>
+            <div class="avatar bg-light-primary p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="shopping-bag" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 *ngIf="!hasRoleManager()"class="font-weight-bolder mb-0" [ngClass]="{
+              'text-danger': numbertasksOfUserTodoToday >0,
+              'text-success': numbertasksOfUserTodoToday==0
+              }">{{numbertasksOfUserTodoToday}}</h2>
+              <h2 *ngIf="hasRoleManager()" class="font-weight-bolder mb-0 text-danger"
+                           >{{calculerdelai(projectEndSoon.reelEndDate)}} jours</h2>
+                            
+              <p class="card-text" *ngIf="!hasRoleManager()">Taches à faire</p>
+              <p class="card-text" *ngIf="hasRoleManager()">Délai plus proche projet</p>
+
+            </div>
+            <div class="avatar bg-light-danger p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="check-square" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-sm-6 col-12" *ngIf="!hasRoleManager()">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="font-weight-bolder mb-0 text-primary">{{delaiFinCurrentSprint}} jours</h2>
+              <p class="card-text">Délai fin sprint</p>
+            </div>
+            <div class="avatar bg-light-primary p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="calendar" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12" *ngIf="hasRoleManager()">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="font-weight-bolder mb-0 text-primary">12</h2>
+              <p class="card-text">Nouvelle demande congé</p>
+            </div>
+            <div class="avatar bg-light-primary p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="calendar" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="font-weight-bolder mb-0 text-success">0</h2>
+              <p class="card-text">Documents à approuver</p>
+            </div>
+            <div class="avatar bg-light-success p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="message-square" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="col-lg-3 col-sm-6 col-12">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="font-weight-bolder mb-0 text-primary">2</h2>
+                <p class="card-text">Activités à approuver</p>
+              </div>
+              <div class="avatar bg-light-primary p-50 m-0">
+                <div class="avatar-content">
+                  <i data-feather="activity" class="font-medium-5"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="font-weight-bolder mb-0 text-danger">10</h2>
+              <p class="card-text small">Messages non lus</p>
+            </div>
+            <div class="avatar bg-light-danger p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="mail" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    
+   
+    </div>
+    <!-- graphique stats of collaborateur  -->
+        <h1 class="title pb-2 pt-0" *ngIf="!hasRoleManager()">Mon équipe</h1>
+
+<div class="row match-height" *ngIf="!hasRoleManager()">
+  <!-- Developer Meetup Card -->
+  <div class="col-lg-4 col-md-6 col-12">
+    <div class="card card-developer-meetup">
+      <div class="bg-light-primary rounded-top text-center">
+        <img src="assets/images/illustration/email.svg" alt="Meeting Pic" height="170" />
+      </div>
+      <div class="card-body">
+        <div class="meetup-header d-flex align-items-center justify-content-between">
+  
+          <div>
+            <h4 class="card-title mb-25 text-primary" style="cursor: pointer;">Projet en cours</h4>
+            <b class="card-text mb-0 text-capitalize">{{projetEncours.title}}</b>
+          </div>
+          <p class="">Délai : <b class="text-danger"> {{calculerdelai(projetEncours.reelEndDate)}} jours</b></p>
+        </div>
+        <div class="media">
+          <div class="avatar bg-light-primary rounded mr-1">
+            <div class="avatar-content">
+              <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+            </div>
+          </div>
+          <div class="media-body">
+            <h6 class="mb-0 text-danger">{{formatDate(projetEncours.estimatedEndDate)}}</h6>
+            <small>Date fin estimée</small>
+          </div>
+        </div>
+        <div class="media">
+          <div class="avatar bg-light-primary rounded mr-1">
+            <div class="avatar-content">
+              <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+            </div>
+          </div>
+          <div class="media-body">
+            <h6 class="mb-0">{{formatDate(projetEncours.debutDate)}}</h6>
+            <small>Date début</small>
+          </div>
+        </div>
+        <div class="media">
+          <div class="avatar bg-light-primary rounded mr-1">
+            <div class="avatar-content">
+              <i data-feather="user" class="avatar-icon font-medium-3"></i>
+            </div>
+          </div>
+          <div class="media-body">
+            <h6 class="mb-0">{{projetEncours.scrumMasterEmail}}</h6>
+            <small>Scrum master</small>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  <!--/ Developer Meetup Card -->
+
+ 
+      <!-- App Design Card -->
+      <div class="col-lg-4 col-md-6 col-12">
+        <div class="card card-app-design">
+          <div class="card-body">
+            <div class="badge badge-light-danger">{{delaiFinCurrentSprint}} jours</div>
+            <h4 class="card-title mt-1 mb-75 text-primary" style="cursor: pointer;">Sprint en cours</h4>
+            <p class="card-text font-small-2 mb-2 capitalizeFirstLetter">
+              {{currentSprint.title}}
+            </p>
+            <div class="design-group">
+              <h6 class="section-label">Equipes</h6>
+              <div class="badge badge-light-primary mr-1" *ngFor="let team of projetEncours.teamAcronyms.slice(0,4)">{{team}}</div>
+           
+            </div>
+            <div class="design-group">
+              <h6 class="section-label">Collegues : </h6>
+              <div class="avatar" *ngFor="let collegue of colleguesOfUser">
+                <img *ngIf="collegue.hasProfilImage"
+                  src="assets/images/profile/user/profil-img/{{ createFullName(collegue.lastName, collegue.firstName) }}.jpg"
+                  width="34" height="34" alt="Avatar" ngbTooltip="{{ createFullName(collegue.lastName, collegue.firstName) }}" />
+            
+                <div class="avatar bg-primary text-light" *ngIf="!collegue.hasProfilImage"
+                  ngbTooltip="{{ createFullName(collegue.lastName, collegue.firstName) }}">
+                  <div class="avatar-content text-uppercase">{{ collegue.lastName.charAt(0) }}{{ collegue.firstName.charAt(0) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="design-planning-wrapper">
+              <div class="design-planning">
+                <p class="card-text mb-25">Date début</p>
+                <h6 class="mb-0">{{formatDateAdvanced(currentSprint.debutDate)}}</h6>
+              </div>
+              <div class="design-planning">
+                <p class="card-text mb-25">Date fin</p>
+                <h6 class="mb-0">{{formatDateAdvanced(currentSprint.endDate)}}</h6>
+              </div>
+              <div class="design-planning">
+                <p class="card-text mb-25">Délai</p>
+                <h6 class="mb-0">{{delaiFinCurrentSprint}} jours</h6>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary btn-block" rippleEffect>Voir plus</button>
+          </div>
+        </div>
+      </div>
+      <!--/ App Design Card -->
+      <!-- Support Tracker Card -->
+      <div class="col-lg-4 col-12">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center pb-0">
+            <h4 class="card-title text-primary m-0 p-0" style="cursor: pointer;">Mes taches</h4>
+            <p class="smaller  d-block mt-1" style="font-size: 10px; color: #000;">sprint en cours</p>
+      
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-2 col-12 d-flex flex-column flex-wrap text-center">
+                <h1 class="font-large-2 font-weight-bolder mt-2 mb-0">
+                  {{ totalTask }}
+                </h1>
+                <p class="card-text">Total</p>
+              </div>
+              <div class="col-sm-10 col-12 d-flex justify-content-center" #supportChartRef>
+                <div id="supportChartoptions">
+                  <!-- Apexchart component-->
+                  <apx-chart [series]="tasksSupportData.series" [chart]="{
+                            height: 290,
+                            width: isMenuToggled === true ? supportChartRef.offsetWidth : supportChartoptions.chart.width,
+                            type: 'radialBar',
+                            sparkline: {
+                              enabled: false
+                            }
+                          }" [plotOptions]="supportChartoptions.plotOptions" [colors]="supportChartoptions.colors"
+                    [fill]="supportChartoptions.fill" [stroke]="supportChartoptions.stroke"
+                    [labels]="supportChartoptions.labels"></apx-chart>
+                  <!-- / Apexchart component-->
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+              <div class="text-center">
+                <p class="card-text mb-50">Accomplis</p>
+                <span class="font-large-1 font-weight-bold text-success">{{ numberTasksFinished }}</span>
+              </div>
+              <div class="text-center">
+                <p class="card-text mb-50">En cours</p>
+                <span class="font-large-1 font-weight-bold text-warning">{{ numberTasksInProgress }}</span>
+              </div>
+      
+              <div class="text-center">
+                <p class="card-text mb-50">A faire</p>
+                <span class="font-large-1 font-weight-bold text-danger">{{ numberTasksToDo }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Support Tracker Card -->
+</div>
+        <h1 class="title pb-2 pt-0" *ngIf="hasRoleManager()">Projet à livrer</h1>
+
+<div class="row match-height" *ngIf="hasRoleManager()">
+  <!-- Developer Meetup Card -->
+  <div class="col-lg-4 col-md-6 col-12">
+    <div class="card card-developer-meetup">
+      <div class="bg-light-primary rounded-top text-center">
+        <img src="assets/images/illustration/email.svg" alt="Meeting Pic" height="170" />
+      </div>
+      <div class="card-body">
+        <div class="meetup-header d-flex align-items-center justify-content-between">
+
+          <div>
+            <h4 class="card-title mb-25 text-primary" style="cursor: pointer;">Projet à livrer</h4>
+            <b class="card-text mb-0 text-capitalize">{{projectEndSoon.title}}</b>
+          </div>
+          <p class="">Délai : <b class="text-danger"> {{calculerdelai(projectEndSoon.reelEndDate)}} jours</b></p>
+        </div>
+        <div class="media">
+          <div class="avatar bg-light-primary rounded mr-1">
+            <div class="avatar-content">
+              <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+            </div>
+          </div>
+          <div class="media-body">
+            <h6 class="mb-0 text-danger">{{formatDate(projectEndSoon.estimatedEndDate)}}</h6>
+            <small>Date fin estimée</small>
+          </div>
+        </div>
+        <div class="media">
+          <div class="avatar bg-light-primary rounded mr-1">
+            <div class="avatar-content">
+              <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+            </div>
+          </div>
+          <div class="media-body">
+            <h6 class="mb-0">{{formatDate(projectEndSoon.debutDate)}}</h6>
+            <small>Date début</small>
+          </div>
+        </div>
+        <div class="media">
+          <div class="avatar bg-light-primary rounded mr-1">
+            <div class="avatar-content">
+              <i data-feather="user" class="avatar-icon font-medium-3"></i>
+            </div>
+          </div>
+          <div class="media-body">
+            <h6 class="mb-0">{{projectEndSoon.scrumMasterEmail}}</h6>
+            <small>Scrum master</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--/ Developer Meetup Card -->
+
+  <!-- Support Tracker Card -->
+  <div class="col-lg-4 col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center pb-0">
+        <h4 class="card-title text-primary m-0 p-0" style="cursor: pointer;">Progression</h4>
+        <p class="d-block" style="font-size: 13px; color: #000; margin-top: 4px;">Projet à livrer</p>
+
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-2 col-12 d-flex flex-column flex-wrap text-left">
+            <h1 class="font-large-2 font-weight-bolder mt-2 mb-0">
+              {{ totalFunctionalityOfProjectEndSoon }}
+            </h1>
+            <p class="card-text small">Fonctionnalités</p>
+          </div>
+          <div class="col-sm-10 col-12 d-flex justify-content-center" #supportChartRef>
+            <div id="supportChartoptions">
+              <!-- Apexchart component-->
+              <apx-chart [series]="functionnalitySupportData.series" [chart]="{
+                            height: 290,
+                            width: isMenuToggled === true ? supportChartRef.offsetWidth : supportChartoptions.chart.width,
+                            type: 'radialBar',
+                            sparkline: {
+                              enabled: false
+                            }
+                          }" [plotOptions]="supportChartoptions.plotOptions" [colors]="supportChartoptions.colors"
+                [fill]="supportChartoptions.fill" [stroke]="supportChartoptions.stroke"
+                [labels]="supportChartoptions.labels"></apx-chart>
+              <!-- / Apexchart component-->
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between mt-1">
+          <div class="text-center">
+            <p class="card-text mb-50">Implémentée</p>
+            <span class="font-large-1 font-weight-bold text-success">{{ numberFinishedFunctionalityOfProjectEndSoon}}</span>
+          </div>
+       
+          <div class="text-center">
+            <p class="card-text mb-50">A faire</p>
+            <span class="font-large-1 font-weight-bold text-danger">{{ numberTODOFunctionalityOfProjectEndSoon }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/ Support Tracker Card -->
+  <!-- Transaction card -->
+  <div class="col-lg-4 col-md-6 col-12">
+    <div class="card card-transaction h-auto">
+      <div class="card-header">
+        <h5 class="card-title text-primary">Fonctionnalités non implementés</h5>
+        <!-- order by priority -->
+      </div>
+      <div class="card-body">
+        <div class="transaction-item" *ngFor="let functionnality of functionalityNotImplementedInProjectEndSoonTop5">
+          <div class="media">
+            <div class="avatar rounded" [ngClass]="
+          {
+            'bg-light-danger':functionnality.priority=='HIGH',
+            'bg-light-warning':functionnality.priority=='MEDIUM',
+            'bg-light-success':functionnality.priority=='LOW'
+          }
+          ">
+              <div class="avatar-content">
+                <i data-feather="instagram" class="avatar-icon font-medium-3"></i>
+              </div>
+            </div>
+            <div class="media-body">
+              <h6 class="transaction-title" style="font-size: 12px;">{{functionnality.title}}</h6>
+              <small style="font-size: 9px;">Complexité : {{functionnality.complexity}}</small>
+            </div>
+          </div>
+          <div class="font-weight-bolder" style="font-size: 9px; width: 60px; text-align: left;" >
+          <small class="d-block">Priority</small>
+          <b [ngClass]="
+          {
+            'text-danger':functionnality.priority=='HIGH',
+            'text-warning':functionnality.priority=='MEDIUM',
+            'text-success':functionnality.priority=='LOW'
+          }
+          ">{{functionnality.priority}}</b><div>
+        </div>
+          </div>
+    </div>
+  </div>
+  <!--/ Transaction card -->
+</div>
+      </div>
+   <!--/ Transaction card -->
+   <!-- Reporting start-->
+    <h1 class="title pb-2 pt-2 pl-2" *ngIf="hasRoleManager()">Reporting</h1>
+  <div class="row w-100">
+    <div class="row reporting w-100 pl-2"  *ngIf="hasRoleManager()">
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Collaborateurs</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b> </p>
+            </div>
+            <div class="avatar bg-light-primary p-50 m-0">
+              <div class="avatar-content" (click)="generateUserReport()">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+    
+    
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Equipes</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b> </p>
+            </div>
+            <div class="avatar bg-light-success p-50 m-0">
+              <div class="avatar-content" (click)="generateTeamsReport()">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+          <!--  -->
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Projets</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b> </p>
+            </div>
+            <div class="avatar bg-light-danger p-50 m-0">
+              <div class="avatar-content" (click)="generateProjectReport()">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+          <!--  -->
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Documents</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b> </p>
+            </div>
+            <div class="avatar bg-light-warning p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+    </div>
+    <div class="row reporting w-100 pl-2" *ngIf="hasRoleManager()">
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Sentiments</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b> </p>
+            </div>
+            <div class="avatar bg-light-primary p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+    
+    
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Congés</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b> </p>
+            </div>
+            <div class="avatar bg-light-success p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Formations</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b> </p>
+            </div>
+            <div class="avatar bg-light-danger p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h4 class="font-weight-bolder mb-0">Formations</h4>
+              <p class="card-text " style="font-size: 10px; margin-top: 5px;">Derniere mise a jour
+                <b>{{formatDate(today)}}</b>
+              </p>
+            </div>
+            <div class="avatar bg-light-danger p-50 m-0">
+              <div class="avatar-content">
+                <i data-feather="download" class="font-medium-5"></i>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+      <!--/ Stats Horizontal Card -->
+    
+    </div>
+  </div>
+
+
+           
+</div>

@@ -1,0 +1,85 @@
+<div class="card w-50 m-auto mt-1" style="margin-top: 10px;">
+  <!-- Basic Vertical form layout section start -->
+  <section id="basic-vertical-layouts">
+    <div class="row">
+      <div class="col-md-12 col-12">
+        <core-card-snippet [snippetCode]="_snippetCodeVertical">
+          <h4 class="card-title text-primary">Ajouter equipe</h4>
+          <div class="card-body">
+            <form class="form form-vertical">
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="first-name-vertical">Nom equipe</label>
+                    <input type="text" id="first-name-vertical" class="form-control" ngModel name="name" #name="ngModel"
+                      [(ngModel)]="teamAdd.name" placeholder="Dxc synergy" />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="email-id-vertical">Acronyme</label>
+                    <input type="text" id="email-id-vertical" class="form-control" ngModel name="acronyme"
+                      #acronyme="ngModel" [(ngModel)]="teamAdd.acronyme" placeholder="dxc synergy" />
+                  </div>
+                </div>
+                
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="contact-info-vertical">Département</label>
+                  <select name="cars" id="cars" class="form-control"
+                    [(ngModel)]="teamAdd.departmentAcronyme" #departmentAcronyme="ngModel">
+                    <option class="p-1" *ngFor="let dep of departmens" [value]="dep.departmentAcronyme">
+                      {{ dep.departmentAcronyme }}: {{ dep.departmentName }}
+                    </option>
+                  </select>
+
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="password-vertical">Date de création</label>
+                    <input type="text" id="password-vertical" class="form-control"  placeholder=""
+                      value="{{formatDate(dateNow)}}" 
+                      [(ngModel)]="teamAdd.creationDate" #creationDate="ngModel"
+                      disabled />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button type="submit" rippleEffect class="btn btn-primary mr-1" (click)="addTeam()">Ajouter</button>
+                  <button type="reset" rippleEffect class="btn btn-outline-danger">Rénitialiser</button>
+                </div>
+              </div>
+            </form> <!-- Closing tag for <form> -->
+          </div>
+        </core-card-snippet>
+      </div>
+    </div>
+  </section>
+  <!-- / Basic Vertical form layout section end -->
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" #btnModal style="visibility: hidden;" class="btn btn-outline-primary"
+  (click)="modalOpenVC(modalVC)" rippleEffect>
+  Vertically Centered
+</button>
+
+<!-- Modal -->
+<ng-template #modalVC let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalCenterTitle">Ajout membre</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <p>
+      l'équipe <b>{{teamAdd.name}} {{teamAdd.acronyme}} </b>est ajouté  au département <b>{{teamAdd.departmentAcronyme}}</b>avec succès
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close('Accept click')" rippleEffect>
+      Ok
+    </button>
+  </div>
+</ng-template>

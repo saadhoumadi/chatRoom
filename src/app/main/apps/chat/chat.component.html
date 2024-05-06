@@ -1,0 +1,319 @@
+<div class="content-area-wrapper container-xxl p-0">
+  <!-- sidebar Left -->
+
+  <!-- chat-sidebar -->
+  <div class="sidebar-left">
+    <div class="sidebar">
+      <core-sidebar class="sidebar-content" name="chat-sidebar" overlayClass="body-content-overlay"
+        collapsibleSidebar="bs-gt-lg">
+        <div class="chat-sidebar-wrapper">
+          <!-- Chat Sidebar area -->
+          <div class="chat-sidebar bg-white">
+            <button class="btn sidebar-close-icon" (click)="toggleSidebar('chat-sidebar')">
+              <i data-feather="x"></i>
+            </button>
+            <!-- Sidebar header start -->
+            <div class="chat-fixed-search">
+              <div class="d-flex align-items-center w-100">
+                <div class="sidebar-profile-toggle">
+                  <button class="btn avatar avatar-border bg-transparent p-0"
+                    (click)="toggleSidebar('chat-user-sidebar')">
+                    <img src="src/assets/images/avatars/1.png" alt="user_avatar" height="42" width="42" />
+                    <span [ngClass]="
+              'avatar-status-online'"></span>
+                  </button>
+                </div>
+                <div class="input-group input-group-merge ml-1 w-100">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text round"><i data-feather="search" class="text-muted"></i></span>
+                  </div>
+                  <input type="text" class="form-control round" id="chat-search"
+                    placeholder="Search or start a new chat" aria-label="Search..." aria-describedby="chat-search"
+                    [(ngModel)]="searchText" />
+                </div>
+              </div>
+            </div>
+            <!-- Sidebar header end -->
+
+            <!-- Sidebar Users start -->
+            <div id="users-list" class="chat-user-list-wrapper list-group" [perfectScrollbar]>
+              <h4 class="chat-list-title">Chats</h4>
+              <ng-container *ngIf="(users | filter: searchText:'email')?.length; else noResultsChats"></ng-container>
+              <ul class="chat-users-list chat-list media-list">
+                <ng-container *ngFor="let item of users | filter: searchText:'email' ">
+                  <li (click)="onItemClick(item.email);" *ngIf="userId !== item.email"
+                    [class.active]="selectedId === item.email">
+                    <span class="avatar"><img src="src/assets/images/avatars/1.png" height="42" width="42" />
+                      <span [ngClass]="
+              'avatar-status-offline'
+            "></span>
+                    </span>
+                    <div class="chat-info flex-grow-1">
+                      <h5 class="mb-0">{{ item.email }} (User)</h5>
+                      <p class="card-text text-truncate">
+                        {{lastMessages[item.email]?.content}}
+                      </p>
+                    </div>
+                    <div class="chat-meta text-nowrap">
+                      <small class="float-right mb-25 chat-time">{{ formatDate(lastMessages[item.email]?.date)
+                        }}</small>
+                      <span *ngIf="hasUnseenMessages(item.email, userId) && unseenMessages[item.email][userId]>0"
+                        class="float-right badge badge-danger badge-pill">{{
+                        unseenMessages[item.email][userId]
+                        }}</span>
+                    </div>
+                  </li>
+                  <!-- <ng-template #userItem>
+                    
+                  </ng-template> -->
+                </ng-container>
+
+                <ng-template #noResultsChats>
+                  <li class="no-results" [ngClass]="{ show: users?.length <= 0 }">
+                    <h6 class="mb-0">No Chats Found</h6>
+                  </li>
+                </ng-template>
+              </ul>
+              <div class="d-flex align-items-center">
+                <h4 class="chat-list-title">Groups</h4>
+
+                <!-- Button trigger modal -->
+                <button type="button" (click)="modalSelectOpen(modalSelect)" class="btn btn-gradient-primary ml-auto"
+                  rippleEffect>
+                  Create
+                </button>
+
+                <!-- Modal -->
+                <ng-template #modalSelect let-modal>
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel1">Créer Groupe</h4>
+                    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <form class="form form-vertical">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label for="first-name-vertical">Nom</label>
+                            <input type="text" id="first-name-vertical" class="form-control" name="fname"
+                              [(ngModel)]="groupName" placeholder="Nom" />
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label>Membres</label>
+                            <ng-select [items]="users" [multiple]="true" [closeOnSelect]="false" [searchable]="false"
+                              bindLabel="email" placeholder="Select members" (change)="onSelectionChange($event)">
+                              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                                <span class="ng-value-label"> {{item.email}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                              </ng-template>
+                            </ng-select>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-primary"
+                            (click)="createChatGroupId(); modal.close('Accept click')" rippleEffect>
+                            Créer
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </ng-template>
+                <!-- / Modal -->
+
+              </div>
+              <ng-container *ngIf="groupNames?.length; else noResultsContacts"></ng-container>
+              <ul class="chat-users-list contact-list media-list">
+                <ng-container *ngFor="let g of groupNames">
+                  <li (click)="onGroupClick(g); toggleSidebar('chat-sidebar')" *ngIf="g.includes(userId);"
+                    [class.active]="selectedId === g">
+                    <span class="avatar"><img src="src/assets/images/avatars/1.png" height="42" width="42"
+                        alt="Generic placeholder image" />
+                      <span [ngClass]="
+            'avatar-status-offline'
+          "></span>
+                    </span>
+
+                    <div class="chat-info flex-grow-1">
+                      <h5 class="mb-0">{{g}} (Group)</h5>
+                      <p class="card-text text-truncate" *ngIf="lastGroupMessage[g]">
+                        {{lastGroupMessage[g]?.content}}
+                      </p>
+                    </div>
+                    <div class="chat-meta text-nowrap">
+                      <small class="float-right mb-25 chat-time">{{ formatDate(lastGroupMessage[g]?.date)
+                        }}</small>
+                      <span *ngIf="hasUnseenGroupMessages(g, userId) && unseenGroupMessages[g][userId]>0"
+                        class="float-right badge badge-danger badge-pill">{{
+                        unseenGroupMessages[g][userId]
+                        }}</span>
+                    </div>
+                  </li>
+                </ng-container>
+
+
+                <ng-template #noResultsContacts>
+                  <li class="no-results" [ngClass]="{ show: groupNames?.length <= 0 }">
+                    <h6 class="mb-0">No Groups Found</h6>
+                  </li>
+                </ng-template>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </core-sidebar>
+
+      <!--/ chat-sidebar -->
+
+      <!-- chat-user-sidebar -->
+
+      <core-sidebar class="chat-profile-sidebar" name="chat-user-sidebar" overlayClass="body-content-overlay"
+        hideOnEsc="true">
+        <!-- <app-chat-user-sidebar></app-chat-user-sidebar> -->
+      </core-sidebar>
+    </div>
+  </div>
+  <!--/ chat-user-sidebar -->
+
+  <!--/ sidebar Left -->
+
+  <!-- content-right -->
+  <div class="content-right">
+    <!-- chat-active-sidebar -->
+    <core-sidebar class="user-profile-sidebar" name="chat-active-sidebar" overlayClass="body-content-overlay"
+      hideOnEsc="true">
+      <app-chat-active-sidebar></app-chat-active-sidebar>
+    </core-sidebar>
+    <!--/ chat-active-sidebar -->
+    <div class="content-wrapper container-xxl p-0">
+      <div class="content-body">
+        <div class="body-content-overlay"></div>
+        <!-- Main chat area -->
+        <section class="chat-app-window">
+          <!-- To load Conversation -->
+          <div class="start-chat-area" [ngClass]="{ 'd-none': selectedId  }">
+            <div class="mb-1 start-chat-icon">
+              <i data-feather="message-square"></i>
+            </div>
+            <h4 class="sidebar-toggle start-chat-text" (click)="toggleSidebar('chat-sidebar')">Start Conversation</h4>
+          </div>
+          <!--/ To load Conversation -->
+
+          <!-- Active Chat -->
+          <div class="active-chat" [ngClass]="{ 'd-none': !selectedId }" *ngIf="selectedId">
+            <!-- Chat Header -->
+            <div class="chat-navbar">
+              <header class="chat-header">
+                <div class="d-flex align-items-center">
+                  <button class="btn sidebar-toggle d-block d-lg-none mr-1 p-0" (click)="toggleSidebar('chat-sidebar')">
+                    <i data-feather="menu" class="font-medium-5"></i>
+                  </button>
+                  <button class="btn avatar avatar-border user-profile-toggle bg-transparent m-0 mr-1 p-0"
+                    (click)="toggleSidebar('chat-active-sidebar')">
+                    <!-- <img [src]="chatUser.avatar" alt="avatar" height="36" width="36" />
+            <span
+              [ngClass]="{
+                'avatar-status-offline': chatUser.status == 'offline',
+                'avatar-status-online': chatUser.status == 'online',
+                'avatar-status-busy': chatUser.status == 'busy',
+                'avatar-status-away': chatUser.status == 'away'
+              }"
+            ></span> -->
+                  </button>
+                  <h6 class="mb-0">{{ conversationName }}</h6>
+                </div>
+                <div class="d-flex align-items-center">
+                  <i data-feather="phone-call" class="cursor-pointer d-sm-block d-none font-medium-2 mr-1"></i>
+                  <i data-feather="video" class="cursor-pointer d-sm-block d-none font-medium-2 mr-1"></i>
+                  <i data-feather="search" class="cursor-pointer d-sm-block d-none font-medium-2"></i>
+                  <div ngbDropdown>
+                    <button class="btn-icon btn btn-transparent hide-arrow btn-sm" type="button" aria-haspopup="true"
+                      aria-expanded="false" ngbDropdownToggle>
+                      <i data-feather="more-vertical" id="chat-header-actions" class="font-medium-2"></i>
+                    </button>
+                    <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="chat-header-actions">
+                      <a ngbDropdownItem href="javascript:void(0);">View Contact</a>
+                      <a ngbDropdownItem href="javascript:void(0);">Mute Notifications</a>
+                      <a ngbDropdownItem href="javascript:void(0);">Block Contact</a>
+                      <a ngbDropdownItem href="javascript:void(0);">Clear Chat</a>
+                      <a ngbDropdownItem href="javascript:void(0);">Report</a>
+                    </div>
+                  </div>
+                </div>
+              </header>
+            </div>
+            <!--/ Chat Header -->
+
+            <!-- User Chat messages -->
+            <div class="user-chats" [perfectScrollbar] #scrollMe [scrollTop]="scrolltop">
+              <div class="chats">
+                <div class="chat" *ngFor="let message of messages"
+                  [ngClass]="{ 'chat-left': userId !== message.senderId }">
+                  <!-- <div class="chat-avatar">
+            <span class="avatar box-shadow-1 cursor-pointer">
+              <img
+                *ngIf="chatRef.senderId === chats.userId; else alternateAvatar"
+                [src]="chatUser.avatar"
+                alt="avatar"
+                height="36"
+                width="36"
+              />
+              <ng-template #alternateAvatar>
+                <img [src]="userProfile.avatar" alt="avatar" height="36" width="36" />
+              </ng-template>
+            </span>
+          </div> -->
+                  <div class="chat-body">
+                    <div class="chat-content">
+                      <span *ngIf="groupNames.includes(conversationName) && userId !== message.senderId">
+                        <b>{{message.senderId}}</b>
+                      </span>
+                      <p>{{ message.content }}</p>
+                      <small class="float-right mb-25 chat-time" style="font-size: 0.7em;">{{ message.date |
+                        date:'HH:mm' }}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- User Chat messages -->
+            <!-- New messages button -->
+            <div *ngIf="hasNewMessages" class="text-center" style="position: absolute; top: 80%; right: 30%; ">
+              <button class="btn btn-primary" (click)="showNewMessages()">New Messages</button>
+            </div>
+
+            <!-- Submit Chat form -->
+            <form class="chat-app-form" action="javascript:void(0);">
+              <div class="input-group input-group-merge mr-1 form-send-message">
+                <div class="input-group-prepend">
+                  <span class="speech-to-text input-group-text"><i data-feather="mic" class="cursor-pointer"></i></span>
+                </div>
+                <input type="text" class="form-control message" placeholder="Type your message or use speech to text"
+                  [(ngModel)]="newMessage" name="chat-message" (keydown.enter)="sendMessage()" />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <label for="attach-doc" class="attachment-icon mb-0">
+                      <i data-feather="image" class="cursor-pointer lighten-2 text-secondary"></i>
+                      <input type="file" id="attach-doc" hidden /> </label></span>
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary send" (click)="sendMessage()" rippleEffect>
+                <i data-feather="send" class="d-lg-none"></i>
+                <span class="d-none d-lg-block">Send</span>
+              </button>
+            </form>
+            <!--/ Submit Chat form -->
+          </div>
+          <!--/ Active Chat -->
+        </section>
+        <!--/ Main chat area -->
+
+      </div>
+    </div>
+  </div>
+  <!--/ content-right -->
+</div>

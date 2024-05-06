@@ -1,0 +1,416 @@
+<style>
+    .firstLetterCapitalize::first-letter{
+        text-transform: capitalize !important;
+    }
+
+</style>
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- content-header component -->
+        <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+        <div id="user-profile">
+            <!-- profile header -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card profile-header mb-2">
+                        <!-- profile cover photo -->
+                        <img class="card-img-top coverPicture"
+                            src="assets/images/profile/user-uploads/coverDxcDefault.webp" alt="User Profile Image" />
+                        <!--/ profile cover photo -->
+
+                        <div class="position-relative">
+                            <!-- profile picture -->
+                            <div class="profile-img-container d-flex align-items-center">
+                                <div class="profile-img text-capitalize position-relative" style="cursor: pointer;">
+                                    <!-- delete or edit profil image -->
+                                    <div class="options">
+                                        <a class="editProfilImage" (click)="displayFileInput()">
+                                            <i data-feather="edit"></i>
+                                        </a>
+                                        <a class="deleteProfilImage" (click)="modalOpenDanger(modalDanger)" rippleEffect>
+                                            <i data-feather="trash-2"></i>
+                                        </a>
+                        
+                                    </div>
+                                    <!-- delete or edit profil image -->
+                                    <span *ngIf="!hasProfilImage" class="avatarProfil"
+                                        #avatar>{{generateInitials(currentUser.lastName,currentUser.firstName)}}</span>
+                                    <img src="assets/images/profile/user/profil-img/{{userFullNamePattern}}.jpg" class="profilImage"
+                                        #profilImage *ngIf="hasProfilImage">
+                                </div>
+                                <!-- profile title -->
+                                <div class="profile-title ml-3">
+                                    <h2 class="text-white text-capitalize">{{ currentUser.lastName }} {{currentUser.firstName}}</h2>
+                                    <p class="text-white">{{ currentUser.realProfil }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- tabs pill -->
+                        <div class="profile-header-nav">
+                            <!-- navbar -->
+                            <nav
+                                class="navbar navbar-expand-md navbar-light justify-content-end justify-content-md-between w-100">
+                                <button class="btn btn-icon navbar-toggler" type="button"
+                                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                    aria-expanded="false" aria-label="Toggle navigation"
+                                    (click)="toggleMenu = !toggleMenu" rippleEffect>
+                                    <i data-feather="align-justify" class="font-medium-5"></i>
+                                </button>
+
+                                <!-- collapse  -->
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent"
+                                    [ngbCollapse]="toggleMenu">
+                                    <div class="profile-tabs d-flex justify-content-between flex-wrap mt-1 mt-md-0">
+                                        <ul class="nav nav-pills mb-0">
+                                            <li class="nav-item">
+                                                <a class="nav-link font-weight-bold" href="javascript:void(0)" (click)="dirigerActivites()">
+                                                    <span class="d-none d-md-block">Activités</span>
+                                                    <i data-feather="rss" class="d-block d-md-none"></i>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link font-weight-bold active" href="javascript:void(0)">
+                                                    <span class="d-none d-md-block">A propos</span>
+                                                    <i data-feather="info" class="d-block d-md-none"></i>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link font-weight-bold" href="javascript:void(0)">
+                                                    <span class="d-none d-md-block">Projets</span>
+                                                    <i data-feather="users" class="d-block d-md-none"></i>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link font-weight-bold" href="javascript:void(0)">
+                                                    <span class="d-none d-md-block">Formations</span>
+                                                    <i data-feather="image" class="d-block d-md-none"></i>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link font-weight-bold" href="javascript:void(0)">
+                                                    <span class="d-none d-md-block">Documents</span>
+                                                    <i data-feather="image" class="d-block d-md-none"></i>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link font-weight-bold" href="javascript:void(0)">
+                                                    <span class="d-none d-md-block">Congés</span>
+                                                    <i data-feather="image" class="d-block d-md-none"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <!-- edit button -->
+                                        <button class="btn btn-primary" rippleEffect>
+                                            <i data-feather="edit" class="d-block d-md-none"></i>
+                                            <span class="font-weight-bold d-none d-md-block">Edit</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--/ collapse  -->
+                            </nav>
+                            <!--/ navbar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ profile header -->
+            <!-- Modern Vertical Wizard -->
+            <section class="modern-vertical-wizard">
+                <div id="stepper4" class="bs-stepper vertical wizard-modern modern-vertical-wizard-example">
+                    <div class="bs-stepper-header">
+                        <div class="step" data-target="#account-details-vertical-modern">
+                            <button type="button" class="step-trigger">
+                                <span class="bs-stepper-box">
+                                    <i data-feather="file-text" class="font-medium-3"></i>
+                                </span>
+                                <span class="bs-stepper-label">
+                                    <span class="bs-stepper-title">Informations personnelles</span>
+                                    <span class="bs-stepper-subtitle">Setup Account Details</span>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="step" data-target="#personal-info-vertical-modern">
+                            <button type="button" class="step-trigger">
+                                <span class="bs-stepper-box">
+                                    <i data-feather="user" class="font-medium-3"></i>
+                                </span>
+                                <span class="bs-stepper-label">
+                                    <span class="bs-stepper-title">Equipe</span>
+                                    <span class="bs-stepper-subtitle">Add Personal Info</span>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="step" data-target="#address-step-vertical-modern">
+                            <button type="button" class="step-trigger">
+                                <span class="bs-stepper-box">
+                                    <i data-feather="map-pin" class="font-medium-3"></i>
+                                </span>
+                                <span class="bs-stepper-label">
+                                    <span class="bs-stepper-title">Statistiques</span>
+                                    <span class="bs-stepper-subtitle">Add Address</span>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="step" data-target="#social-links-vertical-modern">
+                            <button type="button" class="step-trigger">
+                                <span class="bs-stepper-box">
+                                    <i data-feather="link" class="font-medium-3"></i>
+                                </span>
+                                <span class="bs-stepper-label">
+                                    <span class="bs-stepper-title">Autres</span>
+                                    <span class="bs-stepper-subtitle">Add Social Links</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bs-stepper-content">
+                        <div id="account-details-vertical-modern" class="content">
+                            <div class="content-header">
+                                <h5 class="mb-0">Informations personnelles</h5>
+                                <small class="text-muted">Mode read only</small>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-username">Nom</label>
+                                    <input disabled type="text" id="vertical-modern-username" class="form-control" placeholder="johndoe" value="{{currentUser.lastName}}" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-email">Prénom</label>
+                                    <input disabled type="email" id="vertical-modern-email" class="form-control firstLetterCapitalize"
+                                        placeholder="john.doe@email.com" aria-label="john.doe" value="{{currentUser.firstName}}" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-password-toggle col-md-6">
+                                    <label class="form-label" for="vertical-modern-password">Email</label>
+                                    <input type="email" id="vertical-modern-password" class="form-control"
+                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                        disabled value="{{currentUser.email}}"
+                                        />
+                                </div>
+                                <div class="form-group form-password-toggle col-md-6">
+                                    <label class="form-label" for="vertical-modern-confirm-password">Tel</label>
+                                    <input type="text" id="vertical-modern-confirm-password" class="form-control"
+                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                         disabled value="{{formatMobile(currentUser.mobile)}}"
+                                        />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group form-password-toggle col-md-6">
+                                    <label class="form-label" for="vertical-modern-password">Date de naissance</label>
+                                    <input type="text" id="vertical-modern-password" class="form-control"
+                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" disabled
+                                        value="{{formatDate(currentUser.birthDay)}}" />
+                                </div>
+                                <div class="form-group form-password-toggle col-md-6">
+                                    <label class="form-label" for="vertical-modern-confirm-password">Description</label>
+                                    <textarea type="text" id="vertical-modern-confirm-password" class="form-control firstLetterCapitalize"disabled
+                                        value="{{currentUser.description}}" 
+                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" ></textarea>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-outline-secondary btn-prev" disabled rippleEffect>
+                                    <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" (click)="modernVerticalNext()" rippleEffect>
+                                    <span class="align-middle d-sm-inline-block d-none">Next</span>
+                                    <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="personal-info-vertical-modern" class="content">
+                            <div class="content-header">
+                                <h5 class="mb-0">Equipe</h5>
+                                <small>Mode read only.</small>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-first-name">Nom d'équipe</label>
+                                    <input type="text" id="vertical-modern-first-name" class="form-control firstLetterCapitalize" placeholder="John"
+                                     disabled value="{{currentUser.teamName}}"
+                                    />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-last-name">Acronyme</label>
+                                    <input type="text" id="vertical-modern-last-name" class="form-control firstLetterCapitalize" placeholder="Doe"
+                                     disabled value="{{currentUser.teamAcronyme}}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6" style="::first-letter{text-transform: capitalize;}">
+                                    <label class="form-label" for="vertical-modern-first-name">Profil</label>
+                                    <input type="text" id="vertical-modern-first-name" class="form-control" placeholder="John" disabled
+                                        value="{{currentUser.realProfil}}" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-last-name">Statut de travail</label>
+                                    <input type="text" id="vertical-modern-last-name" class="form-control" placeholder="Doe" disabled
+                                        value="{{currentUser.workStatus}}" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-first-name">Nom du departement</label>
+                                    <input type="text" id="vertical-modern-first-name" class="form-control firstLetterCapitalize" placeholder="John" disabled
+                                        value="{{currentUser.departmentName}}" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-last-name">Acronyme du departement</label>
+                                    <input type="text" id="vertical-modern-last-name" class="form-control" placeholder="Doe" disabled
+                                        value="{{currentUser.departmentAcronyme}}" />
+                                </div>
+                            </div>
+                          
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" (click)="modernVerticalPrevious()" rippleEffect>
+                                    <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" (click)="modernVerticalNext()" rippleEffect>
+                                    <span class="align-middle d-sm-inline-block d-none">Next</span>
+                                    <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="address-step-vertical-modern" class="content">
+                            <div class="content-header">
+                                <h5 class="mb-0">Statistiques</h5>
+                                <small>Mode read only</small>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-address">Projets finalisés</label>
+                                    <input type="text" id="vertical-modern-address" class="form-control"
+                                        placeholder="98  Borough bridge Road, Birmingham" value="18" disabled/>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-landmark">Formations finis</label>
+                                    <input type="text" id="vertical-modern-landmark" class="form-control"
+                                        placeholder="Borough bridge" value="5" disabled />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="pincode4">Documents téléversés</label>
+                                    <input type="text" id="pincode4" class="form-control" placeholder="658921" value="55" disabled />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="city4">Activités publiées</label>
+                                    <input type="text" id="city4" class="form-control" placeholder="Birmingham" value="33" disabled />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="pincode4">Messages envoyés</label>
+                                    <input type="text" id="pincode4" class="form-control" placeholder="658921" value="1050" disabled />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="city4">Sentiments publiés</label>
+                                    <input type="text" id="city4" class="form-control" placeholder="Birmingham" value="365" disabled />
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" (click)="modernVerticalPrevious()" rippleEffect>
+                                    <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                </button>
+                                <button class="btn btn-primary btn-next" (click)="modernVerticalNext()" rippleEffect>
+                                    <span class="align-middle d-sm-inline-block d-none">Next</span>
+                                    <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="social-links-vertical-modern" class="content">
+                            <div class="content-header">
+                                <h5 class="mb-0">Autres</h5>
+                                <small>Enter Your Social Links.</small>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-twitter">Age</label>
+                                    <input type="text" id="vertical-modern-twitter" class="form-control" placeholder="https://twitter.com/abc"
+                                        disabled value="{{calculateAge(currentUser.birthDay)}} ans" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-facebook">Experience</label>
+                                    <input type="text" id="vertical-modern-facebook" class="form-control" placeholder="https://facebook.com/abc"
+                                        placeholder="https://twitter.com/abc" disabled value="{{calculateAge(currentUser.dateEmbauche)}} ans" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-google">Derniere Authentification</label>
+                                    <input type="text" id="vertical-modern-google" class="form-control" placeholder="https://plus.google.com/abc"
+                                        disabled value="{{calculerTempsEcoule(currentUser.lastAuthentication)}}" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-label" for="vertical-modern-linkedin">Linkedin</label>
+                                    <input type="text" id="vertical-modern-linkedin" class="form-control" disabled
+                                        value="{{currentUser.linkedinUrl}}" />
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev" (click)="modernVerticalPrevious()" rippleEffect>
+                                    <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                </button>
+                                <button class="btn btn-success btn-submit" rippleEffect (click)="onSubmit()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /Modern Vertical Wizard -->
+
+          
+        </div>
+    </div>
+</div>
+<!-- absolute components -->
+<!-- Modal -->
+<ng-template #modalDanger let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel160">Suppression de la photo de profil</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+        Etes-vous sur de vouloir supprimer votre photo de profil ?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close('Accept click')" #annuler rippleEffect>
+            Annuler
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteImage()" rippleEffect>
+            Supprimer
+        </button>
+
+    </div>
+</ng-template>
+<ng-template #modalSuccess let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel160">Mise a jour de la photo de profil</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+        Votre photo de profil est modifié avec succes.
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close('Accept click')" rippleEffect>
+            OK
+        </button>
+    </div>
+</ng-template>
+<!-- / Modal -->
+<!-- / Modal -->
+<input type="file" #fileInput style="opacity: 0;" (change)="changeProfilImage()">

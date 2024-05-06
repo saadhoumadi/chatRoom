@@ -1,0 +1,184 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    
+    <!-- Invoice List -->
+    <section class="invoice-list-wrapper">
+      <h3 class="pt-1 pb-1">Effectif</h3>
+      <div class="card">
+        <h5 class="card-header text-primary pl-1">Filtrer membre</h5>
+        <div class="row p-1 w-100 d-flex justify-content-center">
+              <div class="col-4">
+                <label class="d-flex align-items-center mb-0 ml-1 ml-md-0"><input [(ngModel)]="searchValue" name="searchValue"
+                    type="search" class="form-control" placeholder="Taper un nom ...." (keyup)="filterUpdate($event)"
+                    (search)="filterUpdate($event)" /></label>
+              </div>
+              <div class="col-4" >
+                <fieldset class="form-group mb-0">
+                  <ng-select [items]="selectStatus" [(ngModel)]="selectedStatus" bindLabel="name" placeholder="Filtrer par statut"
+                    (change)="filterByStatus($event)"></ng-select>
+                </fieldset>
+              </div>
+              <div class="col-4">
+                <fieldset class="form-group mb-0">
+                  <ng-select [items]="selectProfils" [(ngModel)]="selectedStatus" bindLabel="name"
+                    placeholder="filtrer par profil" (change)="filterByProfil($event)"></ng-select>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+      <div class="card">
+        <!-- Invoice List Header -->
+        <div class="row">
+         
+          <div class="col-md-6 col-12" >
+            <div class="d-flex justify-content-between align-items-center m-1">
+              <div class="d-flex align-items-center">
+                <label class="d-flex align-items-center"
+                  >Show
+                  <select class="form-control mx-25" [(ngModel)]="selectedOption">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </label>
+                <button *ngIf="hasRoleManger()" class="btn btn-primary ml-2" (click)="dirigerAddMember()" rippleEffect>Ajouter membre</button>
+              </div>
+            </div>
+          </div>
+         
+        </div>
+        <!--/ Invoice List Header -->
+
+        <!-- Invoice List Table -->
+        <ngx-datatable
+          [rows]="rows"
+          [rowHeight]="70"
+          class="bootstrap core-bootstrap"
+          [limit]="selectedOption"
+          [columnMode]="ColumnMode.force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [scrollbarH]="true"
+        >
+          
+          <ngx-datatable-column name="Nom complet" prop="firstName"[width]="250">
+            <ng-template let-row="row" let-email="value" ngx-datatable-cell-template>
+              <div class="d-flex align-items-center">
+                <div >
+                  <img *ngIf="row.hasProfilImage"
+                    class="rounded-circle mr-1"
+                    src="assets/images/profile/user/profil-img/{{createFullName(row.lastName,row.firstName)}}.jpg"
+                    height="40"
+                    width="40"
+                    style="margin-right: 10px !important;"
+                    alt="datatable-avatar"
+                  />
+  <span *ngIf="!row.hasProfilImage" class="avatarProfilTable" style="margin-right: 10px;"  #avatar>{{generateInitials(row.lastName,row.firstName)}}</span>
+
+                </div>
+               
+                <div class="cell-line-height">
+                  <span class="font-weight-bold d-block text-nowrap font-medium-1">{{ row.lastName }} {{row.firstName}}</span>
+                  <span class="text-muted font-small-2"> @{{ row.email }}</span>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Tel" prop="mobile" [width]="60">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div>
+                {{formatMobile(row.mobile)}}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Profil" prop="realProfil"  [width]="60">
+            <ng-template let-row="row"  ngx-datatable-cell-template>
+              <div>
+                
+                {{row.realProfil }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+            <ngx-datatable-column name="Ancienneté" prop="dateEmbauche" [width]="60">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div>
+                  +{{ calculateAge(row.dateEmbauche)+' '}} an(s)
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+             
+          <ngx-datatable-column name="status" prop="workStatus" [width]="60">
+            <ng-template let-row="row"  ngx-datatable-cell-template>
+              <!-- <a class="font-weight-bold">{{ invoiceStatus }}</a> -->
+              <div class="avatar avatar-status" [ngClass]="{
+                            'bg-light-success': row.workStatus == 'OFFICE',
+                            'bg-light-warning': row.workStatus == 'HOLLIDAY',
+                            'bg-light-danger': row.workStatus == 'MISSION'
+                          }">
+               <span>{{row.workStatus}}</span>
+               
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column   name="Actions" [width]="50" [sortable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div class="d-flex align-items-center col-actions">
+                <a class="mr-1" href="javascript:void(0);" container="body" placement="top" ngbTooltip="Envoyer message"
+                  ><i size="18" data-feather="send"></i
+                ></a>
+                <a
+                  class="mr-1"
+                  routerLink="/apps/invoice/preview/{{ row.id }}"
+                  container="body"
+                  placement="top"
+                  ngbTooltip="Voir profil"
+                  ><i size="18" data-feather="eye"></i
+                ></a>
+                <a *ngIf="hasRoleScrumMaster() || hasRoleTechLead()" class="mr-1" href="javascript:void(0);" container="body" placement="top" ngbTooltip="Affecter une tache"><i size="18"
+                    data-feather="check-square" ></i></a>
+                <div ngbDropdown container="body" *ngIf="hasRoleManger()">
+                  <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow px-0" rippleEffect>
+                    <i data-feather="more-vertical" size="18" class="cursor-pointer"></i>
+                  </button>
+                  <div ngbDropdownMenu>
+                    
+                    <a (click)="dirigerEditUserPage(row)" ngbDropdownItem
+                      ><i data-feather="edit" class="mr-1"></i>Editer</a>
+                      <a href="javascript:void(0)" (click)="deleteUser(row.email)" ngbDropdownItem><i data-feather="trash" class="mr-1"></i>Delete</a>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+        <!--/ Invoice List Table -->
+      </div>
+    </section>
+    <!--/ Invoice List -->
+  </div>
+</div>
+<!-- modals -->
+<!-- Modal -->
+<ng-template #modalVC let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalCenterTitle">Suppression membre</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <p>
+      le membre   est supprimé de l'équipe {{userAdd.teamAcronyme}} avec succes
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close('Accept click')" rippleEffect>
+      Ok
+    </button>
+    <!-- Button trigger modal -->
+    <button type="button" #btnModal style="visibility: hidden;" class="btn btn-outline-primary"
+      (click)="modalOpenVC(modalVC)" rippleEffect>
+      Vertically Centered
+    </button>

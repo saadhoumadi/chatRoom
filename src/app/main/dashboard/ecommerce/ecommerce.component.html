@@ -1,0 +1,400 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <div class="row match-height">
+
+      <!-- Statistics Card -->
+      <div class="col-xl-12 col-md-12 col-12 pt-1" >
+        <div class="card card-statistics" >
+          <div class="card-header">
+            <h4 class="card-title">Statistiques du département : {{currentUser.departmentAcronyme}}</h4>
+            <div class="d-flex align-items-center">
+              <p class="card-text font-small-2 mr-25 mb-0">Derniere mise a jour : Aujourdhuit</p>
+            </div>
+          </div>
+          <div class="card-body statistics-body">
+            <div class="row">
+              <div class="col-sm-6 col-xl-2 mb-2 mb-xl-0">
+                <div class="media">
+                  <div class="avatar bg-light-primary mr-2">
+                    <div class="avatar-content">
+                      <i data-feather="user" class="avatar-icon"></i>
+                    </div>
+                  </div>
+                  <div class="media-body my-auto">
+                    <h4 class="font-weight-bolder mb-0">{{ numberOfManagers}}</h4>
+                    <p class="card-text font-small-1 mb-0">Managers</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-2 mb-2 mb-xl-0" >
+                <div class="media">
+                  <div class="avatar bg-light-primary mr-2">
+                    <div class="avatar-content">
+                      <i data-feather="users" class="avatar-icon"></i>
+                    </div>
+                  </div>
+                  <div class="media-body my-auto">
+                    <h4 class="font-weight-bolder mb-0">{{ nombreEquipes }}</h4>
+                    <p class="card-text font-small-1 mb-0">Equipes</p>
+                  </div>
+                </div>
+              </div>
+                <div class="col-sm-6 col-xl-2 mb-2 mb-xl-0">
+                  <div class="media">
+                    <div class="avatar bg-light-primary mr-2">
+                      <div class="avatar-content">
+                        <i data-feather="user" class="avatar-icon"></i>
+                      </div>
+                    </div>
+                    <div class="media-body my-auto">
+                      <h4 class="font-weight-bolder mb-0">{{ nombreCollaborateurs}}</h4>
+                      <p class="card-text font-small-1 mb-0">Collaborateurs</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-sm-6 col-xl-2 mb-2 mb-xl-0">
+                  <div class="media">
+                    <div class="avatar bg-light-warning mr-2">
+                      <div class="avatar-content">
+                        <i data-feather="shopping-bag" class="avatar-icon"></i>
+                      </div>
+                    </div>
+                    <div class="media-body my-auto">
+                      <h4 class="font-weight-bolder mb-0">{{nombreProjetsEncours}}</h4>
+                      <p class="card-text font-small-1 mb-0">Projets en cours</p>
+                    </div>
+                  </div>
+                </div>
+              
+            <div class="col-sm-6 col-xl-2">
+              <div class="media">
+                <div class="avatar bg-light-success mr-2">
+                  <div class="avatar-content">
+                    <i data-feather="smile" class="avatar-icon"></i>
+                  </div>
+                </div>
+                <div class="media-body my-auto">
+                  <h4 class="font-weight-bolder mb-0">{{pourcentageSentimentSaisis.toFixed(0)}}%</h4>
+                  <p class="card-text font-small-1 mb-0">Sentiments publiés
+                </div>
+              </div>
+            </div>
+              <div class="col-sm-6 col-xl-2">
+                <div class="media">
+                  <div class="avatar bg-light-success mr-2">
+                    <div class="avatar-content">
+                      <i data-feather="smile" class="avatar-icon"></i>
+                    </div>
+                  </div>
+                  <div class="media-body my-auto">
+                    <h4 class="font-weight-bolder mb-0">{{tauxSatisfaction.toFixed(0)}}%</h4>
+                    <p class="card-text font-small-1 mb-0">Sentiment positif
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Statistics Card -->
+    </div>
+    <!-- Other Managers in the same department  -->
+    <div class="card">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="card-header text-primary mt-1 font-weight-bold">Managers</h4>
+        <button class="btn btn-outline-success m-sm-2" rippleEffect (click)="generateTeamsReport()"
+          *ngIf="hasRoleManager()">
+          Télecharger rapport
+        </button>
+      </div>
+      <div class="row pl-1 pr-1 pt-0 pb-0 d-flex justify-content-between align-items-center">
+        <div class="col-6 d-flex align-items-center">
+          <div class="form-group m-0 p-0">
+            <input type="text" class="form-control" placeholder="Taper un nom" [(ngModel)]="searchedManager" (keyup)="afficherPlusManagers()" />
+          </div>
+          <button class="btn btn-primary m-sm-2" rippleEffect>Rechercher</button>
+        </div>
+        <div class="col-4">
+          <fieldset class="form-group mb-0">
+            <ng-select [items]="selectStatusManagers" [(ngModel)]="selectedStatusManagers" bindLabel="name"
+              placeholder="Filtrer par statut" (change)="filterByStatusManagers($event)"></ng-select>
+          </fieldset>
+        </div>
+      </div>
+    
+    </div>
+  <div class="row">
+    <ng-container *ngFor="let manager of sortManagersByNameFirstLetter(managers).slice(0, showCountManagers)">
+      <ng-container *ngIf="manager.lastName.toLowerCase().includes(searchedManager.toLowerCase())">
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="card card-profile">
+            <div class="card card-profile">
+              <img src="assets/images/profile/user/profil-img/coverDxcDefault.webp" style="max-height: 150px !important;"
+                class="img-fluid card-img-top" alt="Profile Cover Photo" />
+              <div class="card-body">
+                <div class="profile-image-wrapper">
+                  <div class="profile-image">
+                    <div class="avatar">
+                      <span *ngIf="!manager.hasProfilImage" class="avatarProfil"
+                        #avatar>{{generateInitials(manager.lastName,manager.firstName)}}</span>
+                      <img *ngIf="manager.hasProfilImage"
+                        src="assets/images/profile/user/profil-img/{{createFullName(manager.lastName,manager.firstName)}}.jpg"
+                        alt="Profile Picture" />
+                    </div>
+                  </div>
+                </div>
+                <h3>{{manager.lastName}} {{manager.firstName}}</h3>
+                <h6 class="text-muted">{{manager.email}}</h6>
+                <div class="badge badge-light-primary profile-badge">Manager</div>
+                <hr class="mb-2" />
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="text-muted font-weight-bolder">Ancienneté</h6>
+                    <h5 class="mb-0">+ {{calculateAge(manager.dateEmbauche)}} an(s)</h5>
+                  </div>
+                  <div>
+                    <h6 class="text-muted font-weight-bolder">Projets suivis</h6>
+                    <h5 class="mb-0">{{manager.nbrProjectInprogressMonitored}}</h5>
+                  </div>
+                  <div>
+                    <h6 class="text-muted font-weight-bolder">Statut</h6>
+                    <h5 class="mb-0 avatar avatar-status" [ngClass]="{
+                                                                                  'bg-light-success':manager.workStatus  == 'OFFICE',
+                                                                                  'bg-light-danger': manager.workStatus == 'MISSION',
+                                                                                  'bg-light-warning': manager.workStatus == 'HOLLIDAY'
+                                                                                }">
+                      {{manager.workStatus}}</h5>
+                  </div>
+            
+                </div>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+    <div class="row w-100 pb-3 d-flex justify-content-center align-items-center">
+      <button class="btn btn-primary" style="margin-right: 15px;" #btnPlusManagers
+        (click)="showCountManagers = showCountManagers + 3">Afficher
+        plus</button>
+      <button class="btn btn-outline-primary" (click)="showCountManagers = showCountManagers - 3">Afficher moins</button>
+    
+    </div>
+    <!--/ Other Managers in the same department  -->
+    <!-- all teams card -->
+    <div class="card">
+     <div class="d-flex justify-content-between align-items-center" >
+      <h3 class="card-header text-primary font-weight-bold">Equipes</h3>
+      <button class="btn btn-outline-success m-sm-2" rippleEffect (click)="generateTeamsReport()" *ngIf="hasRoleManager()">Télecharger rapport</button>
+     </div>
+
+      <div class="row pl-1 pr-1 pt-0 pb-0 d-flex justify-content-between align-items-center" >
+        <div class="col-6 d-flex align-items-center">
+          <div class="form-group m-0 p-0">
+            <input type="text" class="form-control" placeholder="Rechercher une equipe" [(ngModel)]="searchedTeam"
+              (keyup)="afficherPlus()" />
+          </div>
+          <button class="btn btn-primary m-sm-2" rippleEffect (click)="dirigerAddTeam()">Ajouter equipe</button>
+        </div>
+        <div class="col-4">
+          <fieldset class="form-group mb-0">
+            <ng-select [items]="selectStatus" [(ngModel)]="selectedStatus" bindLabel="name" placeholder="Filtrer par statut"
+              (change)="filterByStatus($event)"></ng-select>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  <div class="row teams">
+    <!-- Afficher d'abord les équipes filtrées -->
+    <ng-container *ngFor="let equipe of sortEquipesByAcronymeFirstLetter(equipes).slice(0, showCount)">
+      <div class="col-lg-4" *ngIf="equipe.acronyme.toLowerCase().includes(searchedTeam.toLowerCase())">
+        <div class="card">
+          <div class="card-header no-border">
+            <h5 class="card-title text-uppercase text-primary">{{equipe.acronyme}}</h5>
+          </div>
+          <div class="card-body pt-0">
+            <div class="widget-49">
+              <div class="widget-49-title-wrapper">
+                <div class="widget-49-date-primary">
+                  <span class="widget-49-date-day">{{getDay(equipe.creationDate)}}</span>
+                  <span class="widget-49-date-month">{{getMonth(equipe.creationDate)}}</span>
+                </div>
+                <div class="widget-49-meeting-info">
+                  <span class="widget-49-pro-title text-capitalize">{{equipe.name}}</span>
+                  <span class="widget-49-meeting-time">Crée le {{formatDate(equipe.creationDate)}}</span>
+                </div>
+              </div>
+              <ol class="widget-49-meeting-points">
+                <li class="widget-49-meeting-item"><span>Tech lead : </span><b>{{equipe.techLeadEmail}}</b></li>
+                <li class="widget-49-meeting-item"><span>Effectif : </span><b>{{equipe.nbrCollaborteurs}}</b>
+                  collaborateurs</li>
+                <li class="widget-49-meeting-item "><span>Statut : </span><b [ngClass]="{
+                                                  'text-success':equipe.workTeamStatus  == 'AVAILABLE',
+                                                  'text-danger': equipe.workTeamStatus == 'IN_PROJECT',
+                                                  'text-warning': equipe.workTeamStatus == 'HOLLIDAY'
+                                                }">{{equipe.workTeamStatus}}</b></li>
+              </ol>
+              <div class="widget-49-meeting-action">
+                <h6 class="btn btn-sm btn-flash-border-danger text-danger" (click)="modalOpenDanger(modalDanger,equipe.acronyme,equipe.name)" rippleEffect>Supprimer</h6>
+                <h6  class="btn btn-sm btn-flash-border-primary text-primary" (click)="voirEquipe(equipe.acronyme,equipe.name)">Voir plus</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </ng-container>
+<div class="row w-100 pb-3 d-flex justify-content-center align-items-center">
+          <button class="btn btn-primary" style="margin-right: 15px;" #btnPlus (click)="showCount = showCount + 6">Afficher plus</button>
+          <button class="btn btn-outline-primary" (click)="showCount = showCount - 6">Afficher moins</button>
+
+</div>    
+  </div>
+    <!-- Apex Bar nombre collaborateurs par equipe Start -->
+    <section id="apex-bar-and-candlestick-charts">
+      <div class="row p-2">
+        <!-- Team work status graph start -->
+        <div class="col-xl-4 col-12">
+          <div class="card">
+            <div class="card-header flex-column align-items-start">
+              <h4 class="card-title mb-75 text-primary pt-1">Statut des equipes</h4>
+              <small class="card-subtitle text-muted m-0">Département: {{currentUser.departmentAcronyme}}</small>
+            </div>
+            <div class="card-body">
+              <div id="donut-chart" #apexDonutChartRef>
+                <apx-chart [series]="apexDonutChart.series" [chart]="{
+                                    height: 350,
+                                    width: isMenuToggled === false ? apexDonutChartRef.offsetWidth : apexDonutChart.chart.width,
+                                    type: 'donut'
+                                  }" [labels]="apexDonutChart.labels" [plotOptions]="apexDonutChart.plotOptions"
+                  [responsive]="apexDonutChart.responsive" [colors]="apexDonutChart.colors"
+                  [legend]="apexDonutChart.legend"></apx-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- team work status graph end -->
+        <div class="col-xl-8 col-12">
+          <div class="card">
+            <div
+              class="card-header d-flex flex-sm-row flex-column justify-content-md-between align-items-start justify-content-start">
+              <div>
+                <h4 class="card-subtitle text-primary mt-2">Nombres de collaborateurs par equipe</h4>
+                <small>Département : {{currentUser.departmentAcronyme}}</small>
+              </div>
+              
+            </div>
+            <div class="card-body">
+              <div id="bar-chart" #apexBarChartRef>
+                <apx-chart [series]="apexBarChart.series" [chart]="{
+                        height: 400,
+                        width: isMenuToggled === false ? apexBarChartRef.offsetWidth : apexBarChart.chart.width,
+                        type: 'bar',
+                        toolbar: {
+                          show: false
+                        }
+                      }" [dataLabels]="apexBarChart.dataLabels" [plotOptions]="apexBarChart.plotOptions"
+                  [xaxis]="apexBarChart.xaxis" [colors]="apexBarChart.colors" [grid]="apexBarChart.grid"></apx-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+       
+      </div>
+    </section>
+ 
+
+    <!-- Table Basic -->
+    <div class="row" id="basic-table">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title text-primary m-1">Projets en cours</h4>
+            <small>Département: <b>{{currentUser.departmentAcronyme}}</b></small>
+          </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Projet</th>
+                  <th>Scrum master</th>
+                  <th>Equipes</th>
+                  <th>Statut</th>
+                  <th>Progression</th>
+                  <th>Délai</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let projet of projetsEncours">
+                  <td class="text-capitalize title" style="font-weight: bold; width: 200px !important ;">
+                    {{projet.title}}
+                  </td>
+                  <td>{{projet.scrumMasterEmail}}</td>
+                  <td>{{projet.teamAcronyms}}</td>
+                  <td>
+                    <!-- <a class="font-weight-bold">{{ invoiceStatus }}</a> -->
+                    <div class="avatar avatar-status" [ngClass]="{
+                                                  'bg-light-success': projet.projectStatus == 'FINISHED',
+                                                  'bg-light-warning': projet.projectStatus == 'IN_PROGRESS',
+                                                  'bg-light-danger': projet.projectStatus == 'CANCELED',
+                                                  'bg-light-info': projet.projectStatus == 'NOT_STARTED'
+                                                }">
+                      <span>{{projet.projectStatus}}</span>
+    
+                    </div>
+                  </td>
+                  <td>
+                  <div class="avatar avatar-status" [ngClass]="{
+                                                                    'bg-light-success': projet.progression>=75,
+                                                                    'bg-light-warning': projet.progression<75 && projet.progression>=50,
+                                                                    'bg-light-danger': projet.progression<50
+                                                                  }">
+                    <span>{{projet.progression.toFixed(0)}}%</span>
+                  
+                  </div>
+                </td>
+                  <td>
+                    <div class="avatar avatar-status bg-light-danger">{{calculerDelai(projet.reelEndDate)}} j</div>
+                   </td>
+                </tr>
+    
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/ Table Basic -->
+    <!--/ nbr collaborateurs par equipe END -->
+  </div>
+  
+</div>
+
+
+<!-- absolute components -->
+      <div class="modal-danger d-inline-block">
+      
+        <!-- Modal -->
+        <ng-template #modalDanger let-modal>
+          <div class="modal-header">
+            <h5 class="modal-title" id="myModalLabel160">Suppression equipe</h5>
+            <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" tabindex="0" ngbAutofocus>
+            Etes vous sur de supprimer l'equipe <b class=" text-capitalize">{{deletedTeamName}} </b>({{deletedTeamAcronyme}}) ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="deleteTeam()" rippleEffect>
+               Supprimer
+            </button>
+          </div>
+        </ng-template>
+        <!-- / Modal -->
+      </div>

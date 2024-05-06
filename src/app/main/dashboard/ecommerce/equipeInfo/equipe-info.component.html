@@ -1,0 +1,428 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <div class="row match-height">
+
+            <!-- Statistics Card -->
+            <div class="col-xl-12 col-md-12 col-12 pt-1">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Statistiques de l'equipe <b class="text-uppercase">{{acronyme}}</b></h4>
+                        <div class="d-flex align-items-center">
+                            <p class="card-text font-small-2 mr-25 mb-0">Départment: <strong>{{currentUser.departmentAcronyme}}</strong></p>
+                        </div>
+                    </div>
+                    <div class="card-body statistics-body">
+                        <div class="row">
+                            
+                            <div class="col-sm-6 col-xl-2 mb-2 mb-xl-0">
+                                <div class="media">
+                                    <div class="avatar bg-light-primary mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="users" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{nombreCollaborateurs}}</h4>
+                                        <p class="card-text font-small-3 mb-0">collaborateurs</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-2 mb-2 mb-xl-0">
+                                <div class="media">
+                                    <div class="avatar bg-light-primary mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="shopping-bag" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{projetsFinis.length}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Projets réalisés</p>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            <div class="col-sm-6 col-xl-2 mb-2 mb-xl-0">
+                                <div class="media">
+                                    <div class="avatar bg-light-info mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="calendar" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">2</h4>
+                                        <p class="card-text font-small-3 mb-0">Congés</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-2 mb-2 mb-sm-0">
+                                <div class="media">
+                                    <div class="avatar bg-light-danger mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="book-open" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">40</h4>
+                                        <p class="card-text font-small-3 mb-0">Formations</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-2">
+                                <div class="media">
+                                    <div class="avatar bg-light-success mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="smile" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{pourcentageSentimentSaisis.toFixed(0)}}%</h4>
+                                        <p class="card-text font-small-3 mb-0">Sentiments publiés</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-2">
+                                <div class="media">
+                                    <div class="avatar bg-light-success mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="smile" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{tauxSatisfaction.toFixed(0)}}%</h4>
+                                        <p class="card-text font-small-3 mb-0">Bonne Journée</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Statistics Card -->
+        </div>
+<!-- Collaborateur tables -->
+<app-users-list  [acronyme]="acronyme" [name]="teamName"></app-users-list>
+<h1 class="title text-primary pt-2 m-auto text-center" *ngIf="!hasMembers">Aucune data à afficher </h1>
+ <!--/ Collaborateur tables -->
+    <div class="row match-height" *ngIf="hasMembers ">
+            <!-- Profile Card -->
+            <div class="col-lg-4 col-md-6 col-12" *ngIf="hasTechLead">
+                <div class="card card-profile">
+                    <!-- //default cover for all collaborators of dxc synergy -->
+                    <img src="assets/images/profile/user/profil-img/coverDxcDefault.webp" style="max-height: 150px !important;" class="img-fluid card-img-top" alt="Profile Cover Photo" />
+                    <div class="card-body">
+                        <div class="profile-image-wrapper">
+                            <div class="profile-image">
+                                <div class="avatar">
+                                                    <span *ngIf="!techLead.hasProfilImage" class="avatarProfil"
+                                                        #avatar>{{generateInitials(techLead.lastName,techLead.firstName)}}</span>
+                                    <img *ngIf="techLead.hasProfilImage" src="assets/images/profile/user/profil-img/{{createFullName(techLead.lastName,techLead.firstName)}}.jpg" alt="Profile Picture" />
+                                </div>
+                            </div>
+                        </div>
+                        <h3>{{techLead.lastName}} {{techLead.firstName}}</h3>
+                        <h6 class="text-muted">{{techLead.email}}</h6>
+                        <div class="badge badge-light-primary profile-badge">Tech Lead</div>
+                        <hr class="mb-2" />
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted font-weight-bolder">Ancienneté</h6>
+                                <h5 class="mb-0">+ {{calculateAge(techLead.dateEmbauche)}} an(s)</h5>
+                            </div>
+                            <div>
+                                <h6 class="text-muted font-weight-bolder">Projets</h6>
+                                <h5 class="mb-0">{{projets.length}}</h5>
+                            </div>
+                            <div>
+                                <h6 class="text-muted font-weight-bolder">Statut</h6>
+                                <h5 class="mb-0" 
+                                [ngClass]="{
+                                                  'text-success':techLead.workStatus  == 'OFFICE',
+                                                  'text-danger': techLead.workStatus == 'MISSION',
+                                                  'text-warning': techLead.workStatus == 'HOLLIDAY'
+                                                }"
+                                >
+                                    {{techLead.workStatus}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Profile Card -->
+        <!-- Employee Task Card -->
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card card-employee-task">
+                <div class="card-header">
+                    <h4 class="card-title text-primary">Membres Anciens</h4>
+                    <i data-feather="more-vertical" class="font-medium-3 cursor-pointer"></i>
+                </div>
+                <div class="card-body" *ngFor="let member of top5collaborateurs">
+                    <div class="employee-task d-flex justify-content-between align-items-center">
+                        <div class="media">
+                            <div class="avatar mr-75">
+                                <span *ngIf="!member.hasProfilImage" class="avatarProfilTop rounded"
+                                    #avatar>{{generateInitials(member.lastName,member.firstName)}}</span>
+                                <img *ngIf="member.hasProfilImage" src="assets/images/profile/user/profil-img/{{createFullName(member.lastName,member.firstName)}}.jpg" class="rounded" width="42"
+                                    height="42" alt="Avatar" />
+                            </div>
+                            <div class="media-body my-auto">
+                                <h6 class="mb-0 text-capitalize">{{member.lastName }} {{member.firstName}} </h6>
+                                <small>{{member.realProfil}}</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <small class="text-muted mr-75">+ {{calculateAge(member.dateEmbauche)}} an(s)</small>
+                            
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+        <!--/ Employee Task Card -->
+    
+        <!-- Developer Meetup Card -->
+        <div class="col-lg-4 col-md-6 col-12" *ngIf="projets.length>0">
+            <div class="card card-developer-meetup">
+                <div class="bg-light-primary rounded-top text-center">
+                    <img src="assets/images/illustration/email.svg" alt="Meeting Pic" height="170" />
+                </div>
+                <div class="card-body">
+                    <div class="meetup-header d-flex align-items-center justify-content-between">
+                       
+                        <div>
+                            <h4 class="card-title mb-25 text-primary">Projet en cours</h4>
+                            <b class="card-text mb-0 text-capitalize">{{projetEncours.title}}</b>
+                        </div>
+        <p class="">Délai : <b class="text-danger"> {{calculerDelai(projetEncours.reelEndDate)}} jour</b></p>
+
+                    </div>
+                    <div class="media">
+                        <div class="avatar bg-light-primary rounded mr-1">
+                            <div class="avatar-content">
+                                <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <h6 class="mb-0">{{formatDate(projetEncours.estimatedEndDate)}}</h6>
+                            <small>Date fin estimée</small>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <div class="avatar bg-light-primary rounded mr-1">
+                            <div class="avatar-content">
+                                <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <h6 class="mb-0">{{formatDate(projetEncours.debutDate)}}</h6>
+                            <small>Date début</small>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <div class="avatar bg-light-primary rounded mr-1">
+                            <div class="avatar-content">
+                                <i data-feather="user" class="avatar-icon font-medium-3"></i>
+                            </div>
+                        </div>
+                        <div class="media-body">
+                            <h6 class="mb-0">{{projetEncours.scrumMasterEmail}}</h6>
+                            <small>Scrum master</small>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+        <!--/ Developer Meetup Card -->
+<!-- Statistics start -->
+         <h3 class="pt-1 pb-1 pl-2">Graphiques</h3>
+        <div class="row w-100 pt-1" style="margin-left: 5px;">
+
+            <!-- work status graph start -->
+<div class="col-xl-4 col-12">
+    <div class="card">
+        <div class="card-header flex-column align-items-start">
+            <h4 class="card-title mb-75 text-primary">Statut des membres</h4>
+            <span class="card-subtitle text-muted">Equipe : {{acronyme}}</span>
+        </div>
+        <div class="card-body">
+            <div id="donut-chart" #apexDonutChartRef>
+                <apx-chart [series]="apexDonutChart.series" [chart]="{
+                    height: 350,
+                    width: isMenuToggled === false ? apexDonutChartRef.offsetWidth : apexDonutChart.chart.width,
+                    type: 'donut'
+                  }" [labels]="apexDonutChart.labels" [plotOptions]="apexDonutChart.plotOptions"
+                    [responsive]="apexDonutChart.responsive" [colors]="apexDonutChart.colors"
+                    [legend]="apexDonutChart.legend"></apx-chart>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- work status graph end -->
+            <!-- Experience graph start -->
+            <div class="col-md-4 col-12">
+                <div class="card">
+                    <div class="card-header d-flex flex-column align-items-start">
+                        <h4 class="card-title text-primary">Anciennté des membres</h4>
+                        <span class="card-subtitle text-muted" style="margin-top: 2px;">Equipe : {{acronyme}}</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="customerChartoptions" #customerChartoptionsRef>
+                            <!-- Apexchart component-->
+                            <apx-chart [chart]="{
+                                    type: 'pie',
+                                    height: 345,
+                                    width:
+                                      isMenuToggled === false
+                                        ? customerChartoptionsRef.offsetWidth
+                                        : customerChartoptions.chart.width,
+                                    toolbar: {
+                                      show: false
+                                    }
+                                  }" [labels]="customerChartoptions.labels" [series]="[numberCollaborateursLess5xp,numberCollaborateursBetween510xp,numberCollaborateursMore10xp]"
+                                [dataLabels]="customerChartoptions.dataLabels" [legend]="customerChartoptions.legend"
+                                [stroke]="customerChartoptions.stroke" [colors]="customerChartoptions.colors"></apx-chart>
+                            <!-- / Apexchart component-->
+                        </div>
+                        <div class="pt-25">
+                            <div class="d-flex justify-content-between mb-1">
+                                <div class="d-flex align-items-center">
+                                    <i data-feather="circle" class="font-medium-1 text-primary"></i>
+                                    <span class="font-weight-bold ml-75">Moins de 5 ans</span>
+                                </div>
+                                <span class="text-primary" >{{numberCollaborateursLess5xp}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <div class="d-flex align-items-center">
+                                    <i data-feather="circle" class="font-medium-1 text-warning"></i>
+                                    <span class="font-weight-bold ml-75">Entre 5 et 10 ans</span>
+                                </div>
+                                <span class="text-warning">{{numberCollaborateursBetween510xp}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <i data-feather="circle" class="font-medium-1 text-danger"></i>
+                                    <span class="font-weight-bold ml-75">Plus de 10 ans</span>
+                                </div>
+                                <span class="text-danger">{{numberCollaborateursMore10xp}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Experience graph end -->
+<!-- Support Tracker Card -->
+<div class="col-lg-4 col-12" *ngIf="projets.length>0">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center pb-0">
+            <h4 class="card-title text-primary m-0 p-0" style="cursor: pointer;">Progression</h4>
+            <p class="d-block" style="font-size: 13px; color: #000; margin-top: 4px;">Projet en cours</p>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2 col-12 d-flex flex-column flex-wrap text-left">
+                    <h1 class="font-large-2 font-weight-bolder mt-2 mb-0">
+                        {{totalFunctionalityOfProjectEndSoon}}
+                    </h1>
+                    <p class="card-text small">Fonctionnalités</p>
+                </div>
+                <div class="col-sm-10 col-12 d-flex justify-content-center" #supportChartRef>
+                    <div id="supportChartoptions">
+                        <!-- Apexchart component-->
+                        <apx-chart [series]="functionnalitySupportData.series" [chart]="{
+                            height: 290,
+                            width: isMenuToggled === true ? supportChartRef.offsetWidth : supportChartoptions.chart.width,
+                            type: 'radialBar',
+                            sparkline: {
+                              enabled: false
+                            }
+                          }" [plotOptions]="supportChartoptions.plotOptions" [colors]="supportChartoptions.colors"
+                            [fill]="supportChartoptions.fill" [stroke]="supportChartoptions.stroke"
+                            [labels]="supportChartoptions.labels"></apx-chart>
+                        <!-- / Apexchart component-->
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+                <div class="text-center">
+                    <p class="card-text mb-50">Implémentée</p>
+                    <span class="font-large-1 font-weight-bold text-success">{{numberFinishedFunctionalityOfProjectEndSoon}}</span>
+                </div>
+
+                <div class="text-center">
+                    <p class="card-text mb-50">A faire</p>
+                    <span class="font-large-1 font-weight-bold text-danger">{{numberTODOFunctionalityOfProjectEndSoon}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Support Tracker Card -->
+        </div>
+
+    <!-- Table Basic -->
+    <div class="row w-100" id="basic-table" *ngIf="projets.length>0">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title text-primary m-1">Projets récement réalisés</h4>
+                    <small>Equipe: <b>{{acronyme}}</b></small>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Projet</th>
+                                <th>Scrum master</th>
+                                <th>Equipes</th>
+                                <th>Statut</th>
+                                <th>Date début</th>
+                                <th>Date fin</th>
+                                <th>Retard</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let projet of projetsFinis">
+                                <td class="text-capitalize title" style="font-weight: bold; width: 200px !important ;">
+                                    {{projet.title}}
+                                </td>
+                                <td>{{projet.scrumMasterEmail}}</td>
+                                <td>{{projet.teamAcronyms}}</td>
+                                <td>
+                                    <!-- <a class="font-weight-bold">{{ invoiceStatus }}</a> -->
+                                    <div class="avatar avatar-status" [ngClass]="{
+                                                      'bg-light-success': projet.projectStatus == 'FINISHED',
+                                                      'bg-light-warning': projet.projectStatus == 'IN_PROGRESS',
+                                                      'bg-light-danger': projet.projectStatus == 'CANCELED',
+                                                      'bg-light-info': projet.projectStatus == 'NOT_STARTED'
+                                                    }">
+                                        <span>{{projet.projectStatus}}</span>
+    
+                                    </div>
+                                </td>
+                                <td>{{formatDate(projet.debutDate)}}</td>
+                                <td>{{formatDate(projet.reelEndDate)}}</td>
+                                <!-- <td>{{calculerDelai(projet.reelEndDate)}}</td> -->
+                                <td>
+                                    <div class="avatar avatar-status bg-light-danger">
+                                        <span>{{calculerDelai(projet.reelEndDate)}} j</span>
+                                    </div>
+                                </td>
+                            </tr>
+    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Table Basic -->
+    
+    
+
+    </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,59 @@
+@import '@core/scss/base/pages/dashboard-ecommerce.scss';
+@import '@core/scss/base/plugins/charts/chart-apex.scss';
+@import '@core/scss/angular/libs/toastr.component.scss';
+@import '@core/scss/base/pages/app-invoice.scss';
+@import '@core/scss/angular/libs/datatables.component.scss';
+@import '@core/scss/angular/libs/select.component.scss';
+@import '@core/scss/base/bootstrap-extended/_include'; // Components includes
+@import '@core/scss/base/plugins/charts/chart-apex';
+.avatarProfilTable {
+    width: 50px;
+    height: 50px;
+    clip-path: circle();
+    // border: 1px solid rebeccapurple;
+    text-transform: capitalize;
+    background: $primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 1.4;
+}
+.avatarProfil {
+    width: 100px;
+    height: 100px;
+    clip-path: circle();
+    // border: 1px solid rebeccapurple;
+    text-transform: capitalize;
+    background: $primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 1.4;
+}
+.avatarProfilTop {
+    width: 42px;
+    height: 42px;
+    // border: 1px solid rebeccapurple;
+    text-transform: capitalize;
+    background: $primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 1.4;
+}
+.profilImageTable {
+    clip-path: circle();
+width: 50px;
+    height: 50px;
+    border: none !important;
+
+}

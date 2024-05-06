@@ -1,0 +1,232 @@
+<!-- Vertical Wizard -->
+<div class="card p-1">
+  <h2 class="card-title text-primary m-0">Ajouter un membre</h2>
+</div>
+
+<section class="vertical-wizard">
+   <form #myForm="ngForm"  >
+  <div id="stepper2" class="bs-stepper vertical vertical-wizard-example">
+    <div class="bs-stepper-header">
+      <div class="step" data-target="#account-details-vertical">
+        <button type="button" class="step-trigger">
+          <span class="bs-stepper-box">1</span>
+          <span class="bs-stepper-label">
+            <span class="bs-stepper-title">Informations personnelles</span>
+            <span class="bs-stepper-subtitle">Setup Account Details</span>
+          </span>
+        </button>
+      </div>
+      <div class="step" data-target="#personal-info-vertical">
+        <button type="button" class="step-trigger">
+          <span class="bs-stepper-box">2</span>
+          <span class="bs-stepper-label">
+            <span class="bs-stepper-title">Equipe</span>
+            <span class="bs-stepper-subtitle">Add Personal Info</span>
+          </span>
+        </button>
+      </div>
+     
+      <div class="step" data-target="#social-links-vertical">
+        <button type="button" class="step-trigger">
+          <span class="bs-stepper-box">4</span>
+          <span class="bs-stepper-label">
+            <span class="bs-stepper-title">Autres</span>
+            <span class="bs-stepper-subtitle">Add Social Links</span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="bs-stepper-content">
+      <div id="account-details-vertical" class="content">
+        <div class="content-header">
+          <h5 class="mb-0">Account Details</h5>
+          <small class="text-muted">Enter Your Account Details.</small>
+        </div>
+      
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-username">Nom</label>
+            <input type="text" id="vertical-username" class="form-control" placeholder="khouna"
+            ngModel name="lastName"
+                    #lastName="ngModel" [(ngModel)]="userAdd.lastName"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-username">Prénom</label>
+            <input type="text" id="vertical-username" class="form-control" placeholder="younes"
+            ngModel name="firstName"
+                    #firstName="ngModel" [(ngModel)]="userAdd.firstName"
+            />
+          </div>
+         
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-email">Email</label>
+            <input type="email" id="vertical-email" class="form-control"
+             placeholder="john.doe@email.com" aria-label="john.doe"
+             ngModel name="email"
+                    #email="ngModel" [(ngModel)]="userAdd.email"             />
+          </div>
+          <div class="form-group form-password-toggle col-md-6">
+            <label class="form-label" for="vertical-password">Password</label>
+            <input type="password" id="vertical-password" class="form-control"
+              placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" 
+              ngModel name="password"
+                    #password="ngModel" [(ngModel)]="userAdd.password"
+              />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group form-password-toggle col-md-6">
+            <label class="form-label" for="vertical-confirm-password">Confirm Password</label>
+            <input type="password" id="vertical-confirm-password" class="form-control"
+              placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+              />
+          </div>
+          <div class="form-group form-password-toggle col-md-6">
+            <label class="form-label" for="vertical-modern-confirm-password">Description</label>
+            <textarea type="text" id="vertical-modern-confirm-password" class="form-control firstLetterCapitalize" 
+              ngModel name="description" #description="ngModel"  [(ngModel)]="userAdd.description"
+                   
+              ></textarea>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-outline-secondary btn-prev" disabled rippleEffect>
+            <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+          </button>
+          <button class="btn btn-primary btn-next" (click)="verticalWizardNext()" rippleEffect>
+            <span class="align-middle d-sm-inline-block d-none">Next</span>
+            <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+          </button>
+        </div>
+      </div>
+      <div id="personal-info-vertical" class="content">
+        <div class="content-header">
+          <h5 class="mb-0">Equipe</h5>
+          <small>Enter Your Personal Info.</small>
+        </div>
+    
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-first-name">Nom equipe</label>
+            <input type="text" id="vertical-first-name" class="form-control" placeholder="John"
+              ngModel name="teamName"#teamName="ngModel"  [(ngModel)]="userAdd.teamName" disabled
+              placeholder="{{name}}" 
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-last-name">Acronyme</label>
+            <input type="text" id="vertical-last-name" class="form-control" placeholder="{{acronyme}}" 
+              value="{{acronyme}}"
+              disabled 
+              ngModel name="teamAcronyme"#teamAcronyme="ngModel"  [(ngModel)]="userAdd.teamAcronyme"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-language">Ajouter des profils</label>
+            <ng-select [items]="selectProfil" [multiple]="true" [closeOnSelect]="false" [searchable]="false" bindLabel="name"
+              name="selectLanguage" placeholder="Selectionner des profils" [(ngModel)]="selectMultiSelected"
+              ngModel name="profilsTest" #profilsTest="ngModel"  [(ngModel)]="userAdd.profilsTest"
+              >
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <span class="ng-value-label"> {{ item.name }}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-country">Statut du travail</label>
+            <ng-select [items]="selectWorkStatus" bindLabel="name" placeholder="Selectionner un statut "
+            ngModel name="workStatusTest"#workStatusTest="ngModel"  [(ngModel)]="userAdd.workStatusTest"
+
+            > </ng-select>
+          </div>
+          
+        </div>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-primary btn-prev" (click)="verticalWizardPrevious()" rippleEffect>
+            <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+          </button>
+          <button class="btn btn-primary btn-next" (click)="verticalWizardNext()" rippleEffect>
+            <span class="align-middle d-sm-inline-block d-none">Next</span>
+            <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+          </button>
+        </div>
+      </div>
+     
+      <div id="social-links-vertical" class="content">
+        <div class="content-header">
+          <h5 class="mb-0">Social Links</h5>
+          <small>Enter Your Social Links.</small>
+        </div>
+        
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-twitter">Date de naissance</label>
+            <input type="date" id="vertical-twitter" class="form-control" 
+            ngModel name="birthDay"#birthDay="ngModel"  [(ngModel)]="userAdd.birthDay"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-facebook">Date embauche</label>
+            <input type="date" id="vertical-facebook" class="form-control" 
+             ngModel name="dateEmbauche"#dateEmbauce="ngModel"  [(ngModel)]="userAdd.dateEmbauche"
+
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-google">Tel</label>
+            <input type="text" id="vertical-google" class="form-control" placeholder="06 ** ** ** **" 
+            ngModel name="mobile"#mobile="ngModel"  [(ngModel)]="userAdd.mobile"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label class="form-label" for="vertical-linkedin">Linkedin</label>
+            <input type="text" id="vertical-linkedin" class="form-control" placeholder="https://linkedin.com/abc"
+            ngModel name="linkedinUrl"#linkedinUrl="ngModel"  [(ngModel)]="userAdd.linkedinUrl"
+            />
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-primary btn-prev" (click)="verticalWizardPrevious()" rippleEffect>
+            <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+            <span class="align-middle d-sm-inline-block d-none">Previous</span>
+          </button>
+          <button class="btn btn-success btn-submit" (click)="onSubmit()" rippleEffect>Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+   </form>
+</section>
+<!-- /Vertical Wizard -->
+<!-- Button trigger modal -->
+<button type="button" #btnModal style="visibility: hidden;" class="btn btn-outline-primary" (click)="modalOpenVC(modalVC)" rippleEffect>
+  Vertically Centered
+</button>
+
+<!-- Modal -->
+<ng-template #modalVC let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalCenterTitle">Ajout membre</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" tabindex="0" ngbAutofocus>
+    <p>
+      le membre {{userAdd.lastName}} {{userAdd.firstName}} est ajouté à l'équipe {{userAdd.teamAcronyme}} avec succes
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close('Accept click')" rippleEffect>
+      Ok
+    </button>
